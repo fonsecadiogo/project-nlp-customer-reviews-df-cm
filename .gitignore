@@ -1,1 +1,14 @@
-datasets/
+# Ignore CSV dataset files inside the datasets folder.
+datasets/*.csv
+
+# Ignore macOS metadata files.
+.DS_Store
+
+# Ignore Jupyter temporary checkpoint folders.
+.ipynb_checkpoints/
+
+# Ignore Python cache files.
+__pycache__/
+
+# Ignore local environment files that may contain secrets.
+.env
