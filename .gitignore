@@ -1,5 +1,8 @@
-# Ignore CSV dataset files inside the datasets folder.
-datasets/*.csv
+# Ignore datasets stored locally.
+datasets/
+
+# Ignore Diogo's local EDA sandbox notebook.
+eda_sandbox_diogo.ipynb
 
 # Ignore macOS metadata files.
 .DS_Store
@@ -10,5 +13,5 @@ datasets/*.csv
 # Ignore Python cache files.
 __pycache__/
 
-# Ignore local environment files that may contain secrets.
+# Ignore local environment files that may contain secrets or API keys.
 .env
