@@ -16,7 +16,7 @@ The final sentiment classification model is deployed as a public **Streamlit app
 The sentiment analysis model is deployed as a public Streamlit application.
 
 **Try the application:**  
-https://fzsnxacl3yh9cfendpy7if.streamlit.app/
+https://project-nlp-customer-reviews-df-cm-kievtwuaanpsje67qlxslr.streamlit.app/ 
 
 Users can enter a customer review and receive a sentiment prediction:
 - Positive
