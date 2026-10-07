@@ -4,8 +4,9 @@ import joblib
 from pathlib import Path
 
 
-# Find the project root.
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+# This file is inside project_root/app/,
+# so parent.parent points to the project root.
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 # Define the paths to the saved model files.
 TFIDF_PATH = PROJECT_ROOT / "models" / "tfidf_vectorizer.joblib"
