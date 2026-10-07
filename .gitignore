@@ -1,2 +1,4 @@
 datasets/
 eda_sandbox_diogo.ipynb
+__pycache__/
+*.pyc
