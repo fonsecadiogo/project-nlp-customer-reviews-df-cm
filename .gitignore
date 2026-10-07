@@ -1,4 +1,23 @@
+# Ignore datasets stored locally.
 datasets/
+<<<<<<< HEAD
 eda_sandbox_diogo.ipynb
 __pycache__/
 *.pyc
+=======
+
+# Ignore Diogo's local EDA sandbox notebook.
+eda_sandbox_diogo.ipynb
+
+# Ignore macOS metadata files.
+.DS_Store
+
+# Ignore Jupyter temporary checkpoint folders.
+.ipynb_checkpoints/
+
+# Ignore Python cache files.
+__pycache__/
+
+# Ignore local environment files that may contain secrets or API keys.
+.env
+>>>>>>> origin/feature/caio-dev
