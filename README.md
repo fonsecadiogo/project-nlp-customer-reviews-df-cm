@@ -235,6 +235,27 @@ The project also has some important limitations:
 - The project was developed using one main customer review dataset, so performance may change with reviews from different products or domains.
 
 
+## Run the Application Locally
+
+The trained TF-IDF vectorizer and Balanced Linear SVM are stored as reusable model artifacts.
+
+Main application files:
+
+- `app/app.py` — Streamlit application
+- `app/summarization.py` — NVIDIA Nemotron customer insight generation
+- `app/test_sentiment_model.py` — sentiment model validation
+- `models/tfidf_vectorizer.joblib` — trained TF-IDF vectorizer
+- `models/sentiment_svm_balanced.joblib` — trained sentiment classifier
+
+To start the application locally:
+
+```bash
+python -m streamlit run app/app.py
+```
+
+The Nemotron customer insight functionality requires a valid NVIDIA_API_KEY, configured as an environment variable or deployment secret.
+
+
 ## Team
 
 This project was developed as part of the **Ironhack AI Engineering Bootcamp**.
