@@ -37,12 +37,14 @@ This project explores how NLP can help automatically answer two simple questions
 
 The goal is to turn large amounts of unstructured review text into information that is easier to understand and use.
 
+Working hypothesis: Review text contains enough information to predict sentiment, but the strong class imbalance is expected to reduce performance on the minority classes.
+
 
 ## Dataset
 
 The project uses the **Amazon Product Reviews** dataset provided for the Ironhack project.
 
-The main dataset contained approximately **34,000 customer reviews** with information such as:
+The original dataset contained 34,660 reviews. After cleaning and removing unusable rows and 11 duplicate review texts, the final dataset contained 34,615 model-ready reviews.
 
 - Review text
 - Product rating
@@ -82,7 +84,8 @@ After comparing different numbers of clusters, we selected **6 clusters** and in
 ### 3. GenAI Summarization
 Different generative AI models were tested to transform groups of reviews into short customer insight summaries.
 
-**Qwen 2.5 3B Instruct** was used as our local open-source baseline. **NVIDIA Nemotron 3 Ultra** was also evaluated through the NVIDIA API and produced stronger, more structured customer insight summaries.
+Qwen2.5-3B-Instruct was selected as the final model for the summarization experiments, because it produced the strongest coherent synthesis while remaining reproducible in our GPU environment.  
+NVIDIA Nemotron 3 Ultra was tested later as an additional API benchmark. It produced strong structured outputs, but it was not selected as the project summarization model and was not deployed.
 
 A grounded prompt was designed to reduce unsupported information and keep the generated summaries focused on the provided customer reviews.
 
@@ -90,10 +93,11 @@ A grounded prompt was designed to reduce unsupported information and keep the ge
 ### 4. Application
 The deployed **Streamlit application** provides sentiment classification using the final Balanced Linear SVM and TF-IDF pipeline. Generative AI summarization was developed separately and is documented as an experimental extension of the project.
 
-Users can analyze customer feedback and obtain:
+Users can enter a customer review and receive:
 
-- Sentiment classification
-- Customer insight summaries
+- Positive
+- Neutral
+- Negative
 
 
 ## Sentiment Analysis
@@ -157,6 +161,8 @@ The clusters were interpreted by analyzing their most important TF-IDF terms and
 
 The silhouette scores were low, indicating that customer reviews do not form strongly separated groups. For this reason, **semantic interpretation was important when evaluating the clusters**.
 
+The best silhouette score among the tested configurations was 0.0073 for K=6. This very low score indicates weak natural separation between review themes, so the clustering results were treated as exploratory and validated through human interpretation.
+
 **Key learning:** unsupervised clustering can help discover patterns in customer feedback, but the resulting groups still require human interpretation.
 
 
@@ -205,7 +211,9 @@ The final output focuses on four areas:
 The project contains two complementary NLP pipelines. The sentiment classification pipeline is deployed in the Streamlit application, while the Generative AI pipeline was developed and evaluated as an experimental extension.
 
 1. **Traditional Machine Learning** for sentiment classification.
-2. **Generative AI** for customer insight generation.
+2. **Generative AI** for customer insight generation. 
+
+Nemotron 3 Ultra was evaluated separately as an additional API benchmark and is not part of the deployed application.
 
 ![Application Architecture](docs/architecture.png)
 
@@ -225,6 +233,8 @@ In the experimental GenAI pipeline, Nemotron receives customer reviews through a
 ## Main Results
 
 The project successfully implemented the three main NLP tasks and deployed the sentiment classification pipeline as a working public application.
+
+Selected Qwen2.5-3B-Instruct as the summarization model for the project experiments.
 
 ### Key Results
 
@@ -246,7 +256,6 @@ The project also has some important limitations:
 - The clustering results have low silhouette scores, showing that customer review themes are not strongly separated.
 - Cluster names require human interpretation.
 - Generative AI summaries can still produce unsupported generalizations or hallucinations, even when using grounded prompts.
-- Nemotron requires access to an external NVIDIA API and therefore depends on API availability.
 - The project was developed using one main customer review dataset, so performance may change with reviews from different products or domains.
 
 
