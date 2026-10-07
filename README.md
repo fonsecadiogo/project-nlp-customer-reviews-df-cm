@@ -8,7 +8,22 @@ The project transforms raw customer feedback into useful insights through three 
 - **Review Clustering** — group reviews into meaningful customer feedback categories.
 - **GenAI Summarization** — generate concise customer insight summaries from multiple reviews.
 
-The final solution is deployed as a **Streamlit application**, combining a traditional Machine Learning model for sentiment classification with **NVIDIA Nemotron 3 Ultra** for Generative AI customer insights.
+The final sentiment classification model is deployed as a public **Streamlit application**. Generative AI summarization was developed and evaluated separately as part of the project experimentation.
+
+
+## Live Application
+
+The sentiment analysis model is deployed as a public Streamlit application.
+
+**Try the application:**  
+https://fzsnxacl3yh9cfendpy7if.streamlit.app/
+
+Users can enter a customer review and receive a sentiment prediction:
+- Positive
+- Neutral
+- Negative
+
+The deployed application uses the final Balanced Linear SVM model with TF-IDF text representation.
 
 
 ## Business Problem
@@ -67,13 +82,13 @@ After comparing different numbers of clusters, we selected **6 clusters** and in
 ### 3. GenAI Summarization
 Different generative AI models were tested to transform groups of reviews into short customer insight summaries.
 
-**Qwen 2.5 3B Instruct** was used as our local open-source baseline. For the final application, we integrated **NVIDIA Nemotron 3 Ultra** through the NVIDIA API.
+**Qwen 2.5 3B Instruct** was used as our local open-source baseline. **NVIDIA Nemotron 3 Ultra** was also evaluated through the NVIDIA API and produced stronger, more structured customer insight summaries.
 
 A grounded prompt was designed to reduce unsupported information and keep the generated summaries focused on the provided customer reviews.
 
 
 ### 4. Application
-The final solution combines the sentiment classifier and Generative AI functionality in a **Streamlit application**.
+The deployed **Streamlit application** provides sentiment classification using the final Balanced Linear SVM and TF-IDF pipeline. Generative AI summarization was developed separately and is documented as an experimental extension of the project.
 
 Users can analyze customer feedback and obtain:
 
@@ -161,7 +176,7 @@ The smaller models often produced summaries that were too extractive or had diff
 
 **Qwen 2.5 3B Instruct** produced the best results among the locally tested models and was used as our open-source baseline.
 
-For the final application, we selected **NVIDIA Nemotron 3 Ultra**, accessed through the NVIDIA API, because it produced stronger and more structured customer insight summaries.
+Among the Generative AI models tested, **NVIDIA Nemotron 3 Ultra** produced the strongest and most structured customer insight summaries. It was evaluated through the NVIDIA API as part of the summarization experiments.
 
 ### Grounded Prompting
 
@@ -187,7 +202,7 @@ The final output focuses on four areas:
 
 ## Application Architecture
 
-The final application combines two different NLP approaches:
+The project contains two complementary NLP pipelines. The sentiment classification pipeline is deployed in the Streamlit application, while the Generative AI pipeline was developed and evaluated as an experimental extension.
 
 1. **Traditional Machine Learning** for sentiment classification.
 2. **Generative AI** for customer insight generation.
@@ -204,12 +219,12 @@ TF-IDF converts the review text into numerical features that can be processed by
 
 **Customer Reviews → Grounded Prompt → NVIDIA API → Nemotron 3 Ultra → Customer Insight Summary**
 
-Nemotron receives the customer reviews through a grounded prompt and generates a structured summary of the main strengths, complaints and overall customer perception.
+In the experimental GenAI pipeline, Nemotron receives customer reviews through a grounded prompt and generates a structured summary of the main strengths, complaints and overall customer perception.
 
 
 ## Main Results
 
-The project successfully implemented the three main NLP tasks and connected them into a working application.
+The project successfully implemented the three main NLP tasks and deployed the sentiment classification pipeline as a working public application.
 
 ### Key Results
 
@@ -219,8 +234,8 @@ The project successfully implemented the three main NLP tasks and connected them
 - Identified **6 customer review themes** using K-Means clustering.
 - Compared multiple Generative AI models for review summarization.
 - Selected **Qwen 2.5 3B Instruct** as the best local GenAI baseline.
-- Integrated **NVIDIA Nemotron 3 Ultra** for customer insight generation.
-- Built a **Streamlit application** to make the models accessible through a simple interface.
+- Evaluated **NVIDIA Nemotron 3 Ultra** for customer insight generation.
+- Built and deployed a **Streamlit application** for sentiment classification.
 
 ## Limitations
 
@@ -242,7 +257,7 @@ The trained TF-IDF vectorizer and Balanced Linear SVM are stored as reusable mod
 Main application files:
 
 - `app/app.py` — Streamlit application
-- `app/summarization.py` — NVIDIA Nemotron customer insight generation
+- `app/summarization.py` — experimental NVIDIA Nemotron customer insight module
 - `app/test_sentiment_model.py` — sentiment model validation
 - `models/tfidf_vectorizer.joblib` — trained TF-IDF vectorizer
 - `models/sentiment_svm_balanced.joblib` — trained sentiment classifier
@@ -252,8 +267,6 @@ To start the application locally:
 ```bash
 python -m streamlit run app/app.py
 ```
-
-The Nemotron customer insight functionality requires a valid NVIDIA_API_KEY, configured as an environment variable or deployment secret.
 
 
 ## Team
