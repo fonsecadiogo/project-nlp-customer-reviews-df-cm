@@ -1,0 +1,246 @@
+# NLP Automated Customer Reviews
+
+An NLP project developed during the Ironhack AI Engineering Bootcamp to analyze customer reviews using Machine Learning and Generative AI.
+
+The project transforms raw customer feedback into useful insights through three main NLP tasks:
+
+- **Sentiment Analysis** — classify reviews as Positive, Neutral, or Negative.
+- **Review Clustering** — group reviews into meaningful customer feedback categories.
+- **GenAI Summarization** — generate concise customer insight summaries from multiple reviews.
+
+The final solution is deployed as a **Streamlit application**, combining a traditional Machine Learning model for sentiment classification with **NVIDIA Nemotron 3 Ultra** for Generative AI customer insights.
+
+
+## Business Problem
+
+Companies can receive thousands of customer reviews, making manual analysis slow and difficult.
+
+This project explores how NLP can help automatically answer two simple questions:
+
+1. **What is the customer sentiment?**
+2. **What are customers mainly saying about the product?**
+
+The goal is to turn large amounts of unstructured review text into information that is easier to understand and use.
+
+
+## Dataset
+
+The project uses the **Amazon Product Reviews** dataset provided for the Ironhack project.
+
+The main dataset contained approximately **34,000 customer reviews** with information such as:
+
+- Review text
+- Product rating
+- Product name
+- Product categories
+- Recommendation information
+- Review dates
+
+Before modeling, the data was cleaned by removing irrelevant or highly incomplete columns, handling missing values, normalizing review text, and removing duplicate reviews.
+
+Ratings were converted into three sentiment classes:
+
+- **1–2 stars → Negative**
+- **3 stars → Neutral**
+- **4–5 stars → Positive**
+
+One important challenge was the strong **class imbalance**, with most reviews belonging to the Positive class.
+
+
+## Project Workflow
+
+The project was developed in four main stages:
+
+
+### 1. Sentiment Analysis
+Customer reviews were transformed into numerical features using **TF-IDF** and several classification models were tested.
+
+The final model selected was a **Balanced Linear SVM**, because it provided the best balance between the three sentiment classes.
+
+
+### 2. Review Clustering
+We used **TF-IDF + K-Means clustering** to explore recurring themes in customer feedback.
+
+After comparing different numbers of clusters, we selected **6 clusters** and interpreted them based on their most important terms and representative reviews.
+
+
+### 3. GenAI Summarization
+Different generative AI models were tested to transform groups of reviews into short customer insight summaries.
+
+**Qwen 2.5 3B Instruct** was used as our local open-source baseline. For the final application, we integrated **NVIDIA Nemotron 3 Ultra** through the NVIDIA API.
+
+A grounded prompt was designed to reduce unsupported information and keep the generated summaries focused on the provided customer reviews.
+
+
+### 4. Application
+The final solution combines the sentiment classifier and Generative AI functionality in a **Streamlit application**.
+
+Users can analyze customer feedback and obtain:
+
+- Sentiment classification
+- Customer insight summaries
+
+
+## Sentiment Analysis
+
+The dataset was highly imbalanced, with approximately **93% of the reviews classified as Positive**.
+
+Because of this imbalance, accuracy alone was not enough to evaluate the models. We also compared **precision, recall, F1-score and Macro F1**, paying particular attention to the Negative and Neutral classes.
+
+Several approaches were tested, including:
+
+- Logistic Regression + TF-IDF
+- Naive Bayes + TF-IDF
+- Linear SVM + TF-IDF
+- Linear SVM + Bag of Words
+- Balanced Linear SVM + TF-IDF
+- Balanced Logistic Regression + TF-IDF
+
+### Final Model
+
+We selected **Balanced Linear SVM + TF-IDF** as the final sentiment classifier.
+
+Main test results:
+
+| Metric | Result |
+|---|---:|
+| Accuracy | 92.3% |
+| Macro F1 | 0.56 |
+| Negative F1 | 0.43 |
+| Neutral F1 | 0.28 |
+| Positive F1 | 0.96 |
+
+Although some models achieved slightly higher accuracy, the Balanced Linear SVM performed better across the minority classes.
+
+This was especially important because a model predicting almost everything as Positive could achieve high accuracy due to the class imbalance while still performing poorly on Negative and Neutral reviews.
+
+**Key learning:** high accuracy does not necessarily mean strong performance across all classes.
+
+
+## Review Clustering
+
+To explore the main themes present in customer feedback, we applied **unsupervised learning** using:
+
+**Review Text → TF-IDF → K-Means Clustering**
+
+We compared solutions with **4, 5 and 6 clusters**.
+
+The **6-cluster solution** was selected because it provided the best combination of quantitative results and meaningful separation of customer review themes.
+
+### Final Clusters
+
+| Cluster | Customer Review Theme |
+|---|---|
+| 0 | Ease of Use & Setup |
+| 1 | General & Mixed Feedback |
+| 2 | Fire TV & Streaming |
+| 3 | Kids, Family & Gifts |
+| 4 | Kindle & Reading |
+| 5 | Tablets & Value |
+
+The clusters were interpreted by analyzing their most important TF-IDF terms and representative customer reviews.
+
+The silhouette scores were low, indicating that customer reviews do not form strongly separated groups. For this reason, **semantic interpretation was important when evaluating the clusters**.
+
+**Key learning:** unsupervised clustering can help discover patterns in customer feedback, but the resulting groups still require human interpretation.
+
+
+## GenAI Summarization
+
+The goal of this stage was to transform multiple customer reviews into a short and useful customer insight summary.
+
+We experimented with several pretrained generative AI models:
+
+- T5 Small
+- FLAN-T5 Small
+- DistilBART
+- Qwen 2.5 3B Instruct
+- NVIDIA Nemotron 3 Ultra
+
+The smaller models often produced summaries that were too extractive or had difficulty combining information from multiple reviews.
+
+**Qwen 2.5 3B Instruct** produced the best results among the locally tested models and was used as our open-source baseline.
+
+For the final application, we selected **NVIDIA Nemotron 3 Ultra**, accessed through the NVIDIA API, because it produced stronger and more structured customer insight summaries.
+
+### Grounded Prompting
+
+One important challenge was reducing unsupported information or generalizations in the generated summaries.
+
+We therefore designed a **grounded prompt** instructing the model to:
+
+- Use only information supported by the provided reviews.
+- Avoid inventing product features or customer opinions.
+- Avoid treating isolated complaints as common problems.
+- Mention conflicting opinions when they exist.
+- Synthesize the feedback instead of simply copying reviews.
+
+The final output focuses on four areas:
+
+1. Overall customer perception
+2. Main strengths
+3. Main complaints or trade-offs
+4. Final takeaway
+
+**Key learning:** prompt design can significantly improve the quality and grounding of Generative AI outputs, but it cannot completely eliminate hallucinations.
+
+
+## Application Architecture
+
+The final application combines two different NLP approaches:
+
+1. **Traditional Machine Learning** for sentiment classification.
+2. **Generative AI** for customer insight generation.
+
+![Application Architecture](docs/architecture.png)
+
+### Sentiment Analysis Flow
+
+**Customer Review → Text Preprocessing → TF-IDF → Balanced Linear SVM → Positive / Neutral / Negative**
+
+TF-IDF converts the review text into numerical features that can be processed by the trained Linear SVM classifier.
+
+### GenAI Customer Insights Flow
+
+**Customer Reviews → Grounded Prompt → NVIDIA API → Nemotron 3 Ultra → Customer Insight Summary**
+
+Nemotron receives the customer reviews through a grounded prompt and generates a structured summary of the main strengths, complaints and overall customer perception.
+
+
+## Main Results
+
+The project successfully implemented the three main NLP tasks and connected them into a working application.
+
+### Key Results
+
+- Cleaned and prepared approximately **34,000 customer reviews**.
+- Built a sentiment classifier using **TF-IDF + Balanced Linear SVM**.
+- Achieved **92.3% accuracy** and **0.56 Macro F1** on the sentiment test set.
+- Identified **6 customer review themes** using K-Means clustering.
+- Compared multiple Generative AI models for review summarization.
+- Selected **Qwen 2.5 3B Instruct** as the best local GenAI baseline.
+- Integrated **NVIDIA Nemotron 3 Ultra** for customer insight generation.
+- Built a **Streamlit application** to make the models accessible through a simple interface.
+
+## Limitations
+
+The project also has some important limitations:
+
+- The sentiment dataset is highly imbalanced, with approximately **93% Positive reviews**, making Negative and Neutral reviews more difficult to classify.
+- Neutral sentiment remains the most difficult class for the sentiment model.
+- The clustering results have low silhouette scores, showing that customer review themes are not strongly separated.
+- Cluster names require human interpretation.
+- Generative AI summaries can still produce unsupported generalizations or hallucinations, even when using grounded prompts.
+- Nemotron requires access to an external NVIDIA API and therefore depends on API availability.
+- The project was developed using one main customer review dataset, so performance may change with reviews from different products or domains.
+
+
+## Team
+
+This project was developed as part of the **Ironhack AI Engineering Bootcamp**.
+
+**Team members:**
+- Diogo Fonseca
+- Caio Maia
+
+The project was developed collaboratively using Git and GitHub, with separate branches for development and integration before the final merge into `main`.
