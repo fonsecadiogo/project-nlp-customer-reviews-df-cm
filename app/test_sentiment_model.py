@@ -4,8 +4,8 @@ import joblib
 from pathlib import Path
 
 
-# Find the project root.
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+# Move from app/test_sentiment_model.py to the project root directory.
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 # Define the paths to the saved model files.
 TFIDF_PATH = PROJECT_ROOT / "models" / "tfidf_vectorizer.joblib"

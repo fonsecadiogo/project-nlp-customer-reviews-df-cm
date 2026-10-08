@@ -182,7 +182,7 @@ The smaller models often produced summaries that were too extractive or had diff
 
 **Qwen 2.5 3B Instruct** produced the best results among the locally tested models and was used as our open-source baseline.
 
-Among the Generative AI models tested, **NVIDIA Nemotron 3 Ultra** produced the strongest and most structured customer insight summaries. It was evaluated through the NVIDIA API as part of the summarization experiments.
+**NVIDIA Nemotron 3 Ultra** was evaluated through the NVIDIA API only as an additional benchmark during the summarization experiments. It was not selected as the project summarization model.
 
 ### Grounded Prompting
 
@@ -263,26 +263,75 @@ The project also has some important limitations:
 
 The trained TF-IDF vectorizer and Balanced Linear SVM are stored as reusable model artifacts.
 
-Main application files:
+### 1. Clone the repository
 
-- `app/app.py` — Streamlit application
-- `app/summarization.py` — experimental NVIDIA Nemotron customer insight module
-- `app/test_sentiment_model.py` — sentiment model validation
-- `models/tfidf_vectorizer.joblib` — trained TF-IDF vectorizer
-- `models/sentiment_svm_balanced.joblib` — trained sentiment classifier
+```bash
+git clone https://github.com/fonsecadiogo/project-nlp-customer-reviews-df-cm.git
+cd project-nlp-customer-reviews-df-cm
+```
 
-To start the application locally:
+### 2. Install dependencies
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+### 3. Start the Streamlit application
 
 ```bash
 python -m streamlit run app/app.py
 ```
 
+The deployed sentiment application does not require any API key.
+
+Nemotron was tested separately as an experimental API benchmark and is not required to run the final deployed application.
+
+## Project Structure
+
+```text
+project-nlp-customer-reviews-df-cm/
+├── app/
+│   ├── app.py
+│   ├── summarization.py
+│   └── test_sentiment_model.py
+├── docs/
+│   └── architecture.png
+├── models/
+│   ├── sentiment_svm_balanced.joblib
+│   └── tfidf_vectorizer.joblib
+├── notebooks/
+│   ├── 01_eda_cleaning.ipynb
+│   ├── 02_sentiment_analysis.ipynb
+│   ├── 03_clustering.ipynb
+│   └── 04_summarization.ipynb
+├── tests/
+│   └── test_notebook_decisions.py
+├── Dockerfile
+├── requirements.txt
+└── README.md
+```
+
+## Credits and References
+
+This project was developed as part of the Ironhack AI Engineering Bootcamp.
+
+Main technologies and resources used:
+
+- Python
+- pandas
+- scikit-learn
+- Streamlit
+- Hugging Face Transformers
+- Qwen2.5-3B-Instruct
+- NVIDIA Nemotron 3 Ultra, evaluated as an additional API benchmark
+- Amazon Product Reviews dataset provided for the project
 
 ## Team
 
 This project was developed as part of the **Ironhack AI Engineering Bootcamp**.
 
 **Team members:**
+
 - Diogo Fonseca
 - Caio Maia
 
