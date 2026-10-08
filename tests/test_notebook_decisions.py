@@ -28,7 +28,7 @@ class NotebookDecisionTests(unittest.TestCase):
         self.assertIn("does not provide `predict_proba()` directly", markdown)
         self.assertNotIn("Logistic Regression with TF-IDF was selected as the final", markdown)
 
-    def test_nvidia_environment_imports_precede_key_lookup(self) -> None:
+    def test_nvidia_environment_setup_precedes_key_assignment(self) -> None:
         notebook = read_notebook("04_summarization.ipynb")
         source = "\n".join(
             "".join(cell.get("source", []))
@@ -36,12 +36,12 @@ class NotebookDecisionTests(unittest.TestCase):
             if cell.get("cell_type") == "code"
         )
 
-        imports_at = source.index("from dotenv import load_dotenv")
+        getpass_import_at = source.index("import getpass")
         os_import_at = source.index("import os")
-        lookup_at = source.index('nvidia_api_key = os.getenv("NVIDIA_API_KEY")')
+        assignment_at = source.index('os.environ["NVIDIA_API_KEY"] = getpass.getpass(')
 
-        self.assertLess(imports_at, lookup_at)
-        self.assertLess(os_import_at, lookup_at)
+        self.assertLess(getpass_import_at, assignment_at)
+        self.assertLess(os_import_at, assignment_at)
 
 
 if __name__ == "__main__":
